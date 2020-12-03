@@ -114,36 +114,34 @@ public class CompanyIntergrationTest {
 //                .andExpect(jsonPath("$[0].salary").value(10000));
 //    }
 //
-//    @Test
-//    public void should_return_created_employee_when_create_given_employee() throws Exception {
-//        //given
-//        String employeeAsJson = "{\n" +
-//                "        \"name\": \"tom\",\n" +
-//                "        \"age\": 22,\n" +
-//                "        \"gender\": \"male\",\n" +
-//                "        \"salary\": 7000\n" +
-//                "}";
-//
-//        //when
-//        //then
-//        mockMvc.perform(post("/employees")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(employeeAsJson))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").isString())
-//                .andExpect(jsonPath("$.name").value("tom"))
-//                .andExpect(jsonPath("$.age").value(22))
-//                .andExpect(jsonPath("$.gender").value("male"))
-//                .andExpect(jsonPath("$.salary").value(7000));
-//
-//        List<Employee> employees = employeeRepository.findAll();
-//        assertEquals(1, employees.size());
-//        assertEquals("tom", employees.get(0).getName());
-//        assertEquals(22, employees.get(0).getAge());
-//        assertEquals("male", employees.get(0).getGender());
-//        assertEquals(7000, employees.get(0).getSalary());
-//    }
-//
+    @Test
+    public void should_return_created_company_when_create_given_company() throws Exception {
+        //given
+        String companyAsJson = "{\n" +
+                "    \"companyName\": \"alibaba\",\n" +
+                "    \"employeesNumber\" : 2,\n" +
+                "    \"employeesId\": [\"1\",\"2\"]\n" +
+                "}";
+
+        //when
+        //then
+        mockMvc.perform(post("/companies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(companyAsJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isString())
+                .andExpect(jsonPath("$.companyName").value("alibaba"))
+                .andExpect(jsonPath("$.employeesNumber").value(2))
+                .andExpect(jsonPath("$.employeesId[0]").value(1))
+                .andExpect(jsonPath("$.employeesId[1]").value(2));
+
+        List<Company> companies = companyRepository.findAll();
+        assertEquals(1, companies.size());
+        assertEquals("alibaba", companies.get(0).getCompanyName());
+        assertEquals(2, companies.get(0).getEmployeesNumber());
+        assertEquals(Arrays.asList("1","2"), companies.get(0).getEmployeesId());
+    }
+
 //    @Test
 //    public void should_update_employee_when_update_given_employee_id_and_request_info() throws Exception {
 //        //given
