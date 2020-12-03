@@ -35,7 +35,7 @@ public class CompanyServiceTest {
         //given
         final List<String> employeeIds = Arrays.asList("1","2");
         final List<Company> expected = Arrays.asList(
-                new Company("alibaba", 2, employeeIds)
+                new Company("alibaba", employeeIds)
         );
         when(companyRepository.findAll()).thenReturn(expected);
 
@@ -50,7 +50,7 @@ public class CompanyServiceTest {
     public void should_return_specific_company_when_get_by_id_given_valid_company_id() {
         //given
         final List<String> employeeIds = Arrays.asList("1","2");
-        final Company expected = new Company("alibaba", 2, employeeIds);
+        final Company expected = new Company("alibaba", employeeIds);
         expected.setId("1");
         when(companyRepository.findById(anyString())).thenReturn(java.util.Optional.of(expected));
 
@@ -66,7 +66,7 @@ public class CompanyServiceTest {
         //given
         //given
         final List<String> employeeIds = Arrays.asList("1","2");
-        final Company expected = new Company("alibaba", 2, employeeIds);
+        final Company expected = new Company("alibaba", employeeIds);
         final List<Employee> expectedEmployees = Arrays.asList(
                 new Employee("david", 22, "male", 11111),
                 new Employee("peter", 22, "male", 11111)
@@ -90,9 +90,9 @@ public class CompanyServiceTest {
         //given
         final List<String> employees = Arrays.asList("1","2");
         final List<Company> expected = Arrays.asList(
-                new Company("alibaba", 2, employees),
-                new Company("blibaba", 2, employees),
-                new Company("clibaba", 2, employees)
+                new Company("alibaba", employees),
+                new Company("blibaba", employees),
+                new Company("clibaba", employees)
         );
         when(companyRepository.findAll()).thenReturn(expected);
 
@@ -107,7 +107,7 @@ public class CompanyServiceTest {
     public void should_return_created_company_when_create_given_no_company_in_the_database() {
         //given
         final List<String> employees = Arrays.asList("1","2");
-        final Company expected = new Company("alibaba", 2, employees);
+        final Company expected = new Company("alibaba", employees);
         expected.setId("1");
         when(companyRepository.save(expected)).thenReturn(expected);
 
@@ -125,8 +125,8 @@ public class CompanyServiceTest {
     public void should_return_updated_company_when_update_given_valid_company_id() {
         //given
         final List<String> employees = Arrays.asList("1","2");
-        final Company company = new Company( "baliaa", 2, employees);
-        final Company expected = new Company( "alibaba", 2, employees);
+        final Company company = new Company( "baliaa", employees);
+        final Company expected = new Company( "alibaba", employees);
         company.setId("2");
         when(companyRepository.save(any(Company.class))).thenReturn(company);
         when(companyRepository.findById(anyString())).thenReturn(java.util.Optional.of(company));
@@ -145,7 +145,7 @@ public class CompanyServiceTest {
     public void should_delete_company_when_delete_given_valid_company_id() {
         //given
         final List<String> employees = Arrays.asList("1","2");
-        final Company expected = new Company("alibaba", 2, employees);
+        final Company expected = new Company("alibaba", employees);
 
 
         //when

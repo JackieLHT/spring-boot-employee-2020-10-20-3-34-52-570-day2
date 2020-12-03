@@ -17,10 +17,10 @@ public class Company {
     public Company() {
     }
 
-    public Company(String companyName, Integer employeesNumber, List<String> employees) {
+    public Company(String companyName, List<String> employees) {
         this.companyName = companyName;
-        this.employeesNumber = employeesNumber;
         this.employeesId = employees;
+        this.employeesNumber = employees.size();
     }
 
     public void setId(String id) {

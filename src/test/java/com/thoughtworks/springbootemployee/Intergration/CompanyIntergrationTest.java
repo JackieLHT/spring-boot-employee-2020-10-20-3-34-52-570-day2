@@ -42,7 +42,7 @@ public class CompanyIntergrationTest {
     public void should_return_all_companies_when_get_all_given_all_companies() throws Exception {
         //given
         final List<String> employeeIds = Arrays.asList("1", "2");
-        Company company = new Company("alibaba", 2, employeeIds);
+        Company company = new Company("alibaba", employeeIds);
         companyRepository.save(company);
         //when
         //then
@@ -60,7 +60,7 @@ public class CompanyIntergrationTest {
     public void should_return_specific_company_when_get_by_id_given_valid_company_id() throws Exception {
         //given
         final List<String> employeeIds = Arrays.asList("1", "2");
-        Company company = new Company("alibaba", 2, employeeIds);
+        Company company = new Company("alibaba", employeeIds);
         companyRepository.save(company);
         //when
         //then
@@ -84,7 +84,7 @@ public class CompanyIntergrationTest {
         for(Employee employee:employeeRepository.findAll()){
             employees.add(employee.getId());
         }
-        Company company = new Company("alibaba", 2,employees);
+        Company company = new Company("alibaba",employees);
         companyRepository.save(company);
         //when
         //then
@@ -101,9 +101,9 @@ public class CompanyIntergrationTest {
     @Test
     public void should_return_2_companies_when_get_by_paging_given_3_companies_and_page_number_is_0_and_pagesize_is_2() throws Exception {
         //given
-        Company company1 = new Company("KFC", 2, Arrays.asList("1","2"));
-        Company company2 = new Company("UNIQUO", 2, Arrays.asList("4","5"));
-        Company company3 = new Company("LOGON", 2, Arrays.asList("6","7"));
+        Company company1 = new Company("KFC", Arrays.asList("1","2"));
+        Company company2 = new Company("UNIQUO", Arrays.asList("4","5"));
+        Company company3 = new Company("LOGON", Arrays.asList("6","7"));
         companyRepository.save(company1);
         companyRepository.save(company2);
         companyRepository.save(company3);
@@ -146,7 +146,7 @@ public class CompanyIntergrationTest {
     public void should_update_company_when_update_given_company_id_and_companyUpdate_info() throws Exception {
         //given
         final List<String> employeeIds = Arrays.asList("1", "2");
-        Company company = new Company("alibaba", 2, employeeIds);
+        Company company = new Company("alibaba", employeeIds);
         companyRepository.save(company);
         String companyUpdateAsJson = "{\n" +
                 "    \"companyName\": \"NEW\",\n" +
@@ -177,7 +177,7 @@ public class CompanyIntergrationTest {
     public void should_delete_specific_company_when_delete_given_valid_company_id() throws Exception {
         //given
         final List<String> employeeIds = Arrays.asList("1", "2");
-        Company company = new Company("alibaba", 2, employeeIds);
+        Company company = new Company("alibaba", employeeIds);
         companyRepository.save(company);
 
         //when
