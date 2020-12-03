@@ -164,7 +164,7 @@ public class CompanyServiceTest {
         //when
         //then
         assertThrows(ResponseStatusException.class, () -> {
-            companyService.update("999",company);
+            companyService.update("999", company);
         }, "Company Id does not exist");
     }
 

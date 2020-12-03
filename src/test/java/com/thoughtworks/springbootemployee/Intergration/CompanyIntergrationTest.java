@@ -11,13 +11,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,12 +67,27 @@ public class CompanyIntergrationTest {
         companyRepository.save(company);
         //when
         //then
-        mockMvc.perform(get("/companies/"+company.getId()))
+        mockMvc.perform(get("/companies/" + company.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").isString())
                 .andExpect(jsonPath("$.companyName").value("alibaba"))
                 .andExpect(jsonPath("$.employeesNumber").value(2))
                 .andExpect(jsonPath("$.employeesId", hasSize(2)));
+
+    }
+
+    @Test
+    public void should_thorw_COMPANY_ID_DOES_NOT_EXIST_exception_when_getById_given_invalid_company_id() throws Exception {
+        //given
+        final List<String> employeeIds = Arrays.asList("1", "2");
+        Company company = new Company("alibaba", employeeIds);
+        companyRepository.save(company);
+        //when
+        //then
+        mockMvc.perform(get("/companies/" + "5fc8913234ba53396c26a863"))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
+                .andExpect(result -> assertEquals("404 NOT_FOUND \"Company Id does not exist\"", result.getResolvedException().getMessage()));
 
     }
 
@@ -81,29 +99,44 @@ public class CompanyIntergrationTest {
         employeeRepository.save(employee1);
         employeeRepository.save(employee2);
         List<String> employees = new ArrayList<>();
-        for(Employee employee:employeeRepository.findAll()){
+        for (Employee employee : employeeRepository.findAll()) {
             employees.add(employee.getId());
         }
-        Company company = new Company("alibaba",employees);
+        Company company = new Company("alibaba", employees);
         companyRepository.save(company);
         //when
         //then
-        mockMvc.perform(get("/companies/"+company.getId()))
+        mockMvc.perform(get("/companies/" + company.getId() + "/employees"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").isString())
-                .andExpect(jsonPath("$.companyName").value("alibaba"))
-                .andExpect(jsonPath("$.employeesNumber").value(2))
-                .andExpect(jsonPath("$.employeesId", hasSize(2)))
-                .andExpect(jsonPath("$.employeesId[0]").value(employees.get(0)))
-                .andExpect(jsonPath("$.employeesId[1]").value(employees.get(1)));
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[*].id", containsInAnyOrder(employees.get(0), employees.get(1))))
+                .andExpect(jsonPath("$[*].name", containsInAnyOrder("David", "Jackie")))
+                .andExpect(jsonPath("$[*].age", containsInAnyOrder(18, 18)))
+                .andExpect(jsonPath("$[*].gender", containsInAnyOrder("male", "female")))
+                .andExpect(jsonPath("$[*].salary", containsInAnyOrder(10000, 10000)));
+    }
+
+    @Test
+    public void should_thorw_COMPANY_ID_DOES_NOT_EXIST_exception_when_etEmployeesByCompanyId_given_invalid_company_id() throws Exception {
+        //given
+        final List<String> employeeIds = Arrays.asList("1", "2");
+        Company company = new Company("alibaba", employeeIds);
+        companyRepository.save(company);
+        //when
+        //then
+        mockMvc.perform(get("/companies/" + "5fc8913234ba53396c26a863"))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
+                .andExpect(result -> assertEquals("404 NOT_FOUND \"Company Id does not exist\"", result.getResolvedException().getMessage()));
+
     }
 
     @Test
     public void should_return_2_companies_when_get_by_paging_given_3_companies_and_page_number_is_0_and_pagesize_is_2() throws Exception {
         //given
-        Company company1 = new Company("KFC", Arrays.asList("1","2"));
-        Company company2 = new Company("UNIQUO", Arrays.asList("4","5"));
-        Company company3 = new Company("LOGON", Arrays.asList("6","7"));
+        Company company1 = new Company("KFC", Arrays.asList("1", "2"));
+        Company company2 = new Company("UNIQUO", Arrays.asList("4", "5"));
+        Company company3 = new Company("LOGON", Arrays.asList("6", "7"));
         companyRepository.save(company1);
         companyRepository.save(company2);
         companyRepository.save(company3);
@@ -115,7 +148,7 @@ public class CompanyIntergrationTest {
     }
 
     @Test
-    public void should_return_created_company_when_create_given_company() throws Exception {
+    public void should_return_created_company_when_create_given_valid_company() throws Exception {
         //given
         String companyAsJson = "{\n" +
                 "    \"companyName\": \"alibaba\",\n" +
@@ -139,7 +172,29 @@ public class CompanyIntergrationTest {
         assertEquals(1, companies.size());
         assertEquals("alibaba", companies.get(0).getCompanyName());
         assertEquals(2, companies.get(0).getEmployeesNumber());
-        assertEquals(Arrays.asList("1","2"), companies.get(0).getEmployeesId());
+        assertEquals(Arrays.asList("1", "2"), companies.get(0).getEmployeesId());
+    }
+
+    @Test
+    public void should_thorw_COMPANY_ID_DOES_NOT_EXIST_exception_when_update_given_invalid_company_id() throws Exception {
+        //given
+        final List<String> employeeIds = Arrays.asList("1", "2");
+        Company company = new Company("alibaba", employeeIds);
+        companyRepository.save(company);
+        String companyUpdateAsJson = "{\n" +
+                "    \"companyName\": \"NEW\",\n" +
+                "    \"employeesNumber\" : 2,\n" +
+                "    \"employeesId\": [\"4\",\"5\"]\n" +
+                "}";
+        //when
+        //then
+        mockMvc.perform(put("/companies/" + "5fc8913234ba53396c26a863")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(companyUpdateAsJson))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
+                .andExpect(result -> assertEquals("404 NOT_FOUND \"Company Id does not exist\"", result.getResolvedException().getMessage()));
+
     }
 
     @Test
@@ -170,7 +225,7 @@ public class CompanyIntergrationTest {
         assertEquals(1, employees.size());
         assertEquals("NEW", employees.get(0).getCompanyName());
         assertEquals(2, employees.get(0).getEmployeesNumber());
-        assertEquals(Arrays.asList("4","5"), employees.get(0).getEmployeesId());
+        assertEquals(Arrays.asList("4", "5"), employees.get(0).getEmployeesId());
     }
 
     @Test
@@ -187,5 +242,20 @@ public class CompanyIntergrationTest {
 
         List<Company> employees = companyRepository.findAll();
         assertEquals(0, employees.size());
+    }
+
+    @Test
+    public void should_thorw_COMPANY_ID_DOES_NOT_EXIST_exception_when_delete_given_invalid_company_id() throws Exception {
+        //given
+        final List<String> employeeIds = Arrays.asList("1", "2");
+        Company company = new Company("alibaba", employeeIds);
+        companyRepository.save(company);
+        //when
+        //then
+        mockMvc.perform(delete("/companies/" + "5fc8913234ba53396c26a863"))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
+                .andExpect(result -> assertEquals("404 NOT_FOUND \"Company Id does not exist\"", result.getResolvedException().getMessage()));
+
     }
 }
