@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -68,8 +69,7 @@ public class CompanyIntergrationTest {
                 .andExpect(jsonPath("$.id").isString())
                 .andExpect(jsonPath("$.companyName").value("alibaba"))
                 .andExpect(jsonPath("$.employeesNumber").value(2))
-                .andExpect(jsonPath("$.employeesId[0]").value(1))
-                .andExpect(jsonPath("$.employeesId[1]").value(2));
+                .andExpect(jsonPath("$.employeesId", hasSize(2)));
 
     }
 //
@@ -93,27 +93,23 @@ public class CompanyIntergrationTest {
 //        List<Employee> filteredEmployees = employeeRepository.findAllByGender("male");
 //        assertEquals(1, filteredEmployees.size());
 //    }
-//
-//    @Test
-//    public void should_return_2_employees_when_get_by_paging_given_3_employees_and_page_number_is_1_and_pagesize_is_2() throws Exception {
-//        //given
-//        Employee employee1 = new Employee("David", 18, "male", 10000);
-//        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
-//        Employee employee3 = new Employee("Tom", 18, "male", 10000);
-//        employeeRepository.save(employee1);
-//        employeeRepository.save(employee2);
-//        employeeRepository.save(employee3);
-//        //when
-//        //then
-//        mockMvc.perform(get("/employees").param("page", String.valueOf(1)).param("pageSize", String.valueOf(2)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$[0].id").isString())
-//                .andExpect(jsonPath("$[0].name").value("David"))
-//                .andExpect(jsonPath("$[0].age").value(18))
-//                .andExpect(jsonPath("$[0].gender").value("male"))
-//                .andExpect(jsonPath("$[0].salary").value(10000));
-//    }
-//
+
+    @Test
+    public void should_return_2_companies_when_get_by_paging_given_3_companies_and_page_number_is_0_and_pagesize_is_2() throws Exception {
+        //given
+        Company company1 = new Company("KFC", 2, Arrays.asList("1","2"));
+        Company company2 = new Company("UNIQUO", 2, Arrays.asList("4","5"));
+        Company company3 = new Company("LOGON", 2, Arrays.asList("6","7"));
+        companyRepository.save(company1);
+        companyRepository.save(company2);
+        companyRepository.save(company3);
+        //when
+        //then
+        mockMvc.perform(get("/companies").param("page", String.valueOf(0)).param("pageSize", String.valueOf(2)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
     @Test
     public void should_return_created_company_when_create_given_company() throws Exception {
         //given

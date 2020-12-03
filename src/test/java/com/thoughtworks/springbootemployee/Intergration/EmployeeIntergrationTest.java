@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -101,11 +102,7 @@ public class EmployeeIntergrationTest {
         //then
         mockMvc.perform(get("/employees").param("page", String.valueOf(0)).param("pageSize", String.valueOf(2)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").isString())
-                .andExpect(jsonPath("$[0].name").value("David"))
-                .andExpect(jsonPath("$[0].age").value(18))
-                .andExpect(jsonPath("$[0].gender").value("male"))
-                .andExpect(jsonPath("$[0].salary").value(10000));
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 
     @Test
