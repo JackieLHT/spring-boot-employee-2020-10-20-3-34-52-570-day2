@@ -47,18 +47,4 @@ public class Employee {
     public Integer getSalary() {
         return salary;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-
-        if (obj.getClass() != this.getClass()) {
-            return false;
-        }
-
-        final Employee other = (Employee) obj;
-        return this.id.equals(other.id) && this.name.equals(other.name) && this.age == other.age && this.gender.equals(other.gender) && this.salary == other.salary;
-    }
 }

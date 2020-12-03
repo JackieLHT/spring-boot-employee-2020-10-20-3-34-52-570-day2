@@ -12,6 +12,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
@@ -50,7 +53,7 @@ public class CompanyServiceTest {
         final List<String> employeeIds = Arrays.asList("1","2");
         final Company expected = new Company("alibaba", 2, employeeIds);
         expected.setId("1");
-        when(companyRepository.findById("1")).thenReturn(java.util.Optional.of(expected));
+        when(companyRepository.findById(anyString())).thenReturn(java.util.Optional.of(expected));
 
         //when
         final Company companies = companyService.getById("1");
@@ -70,14 +73,17 @@ public class CompanyServiceTest {
                 new Employee("peter", 22, "male", 11111)
         );
         expected.setId("1");
-        when(companyRepository.findById("1")).thenReturn(java.util.Optional.of(expected));
+        expectedEmployees.get(0).setId("1");
+        expectedEmployees.get(0).setId("2");
+        when(companyRepository.findById(anyString())).thenReturn(java.util.Optional.of(expected));
         when(employeeRepository.findAllById(employeeIds)).thenReturn(expectedEmployees);
 
         //when
         final List<Employee> employees = companyService.getEmployeesByCompanyId("1");
 
         //then
-        assertEquals(expectedEmployees, employees);
+        assertEquals(expectedEmployees.get(0), employees.get(0));
+        assertEquals(expectedEmployees.get(1), employees.get(1));
     }
 
     @Test
@@ -122,14 +128,18 @@ public class CompanyServiceTest {
         final List<String> employees = Arrays.asList("1","2");
         final Company company = new Company( "baliaa", 2, employees);
         final Company expected = new Company( "alibaba", 2, employees);
-        company.setId("1");
-        when(companyRepository.save(company)).thenReturn(company);
+        company.setId("2");
+        when(companyRepository.save(any(Company.class))).thenReturn(company);
+        when(companyRepository.findById(anyString())).thenReturn(java.util.Optional.of(company));
+
 
         //when
         final Company updatedCompany = companyService.update("1", expected);
 
         //then
-        assertEquals(expected, updatedCompany);
+        assertEquals("baliaa", updatedCompany.getCompanyName());
+        assertEquals(2, updatedCompany.getEmployeesNumber());
+        assertEquals(employees, updatedCompany.getEmployeesId());
     }
 
     @Test
