@@ -3,12 +3,16 @@ package com.thoughtworks.springbootemployee.Service;
 import com.thoughtworks.springbootemployee.Model.Employee;
 import com.thoughtworks.springbootemployee.Repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
+    public static final String EMPLOYEE_ID_DOES_NOT_EXIST = "Employee Id does not exist";
     @Autowired
     private EmployeeRepository employeeRepository;
 
@@ -25,7 +29,7 @@ public class EmployeeService {
     }
 
     public Employee getById(String id) {
-        return employeeRepository.findById(id).orElse(null);
+        return employeeRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_DOES_NOT_EXIST));
     }
 
     public List<Employee> getPaginatedAll(Integer page, Integer pageSize) {
@@ -43,10 +47,14 @@ public class EmployeeService {
             employeeUpdate.setId(id);
             return employeeRepository.save(employeeUpdate);
         }
-        return null;
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_DOES_NOT_EXIST);
     }
 
     public void delete(String id) {
-        employeeRepository.deleteById(id);
+        if(getById(id) != null) {
+            employeeRepository.deleteById(id);
+            return;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_DOES_NOT_EXIST);
     }
 }

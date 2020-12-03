@@ -117,7 +117,7 @@ public class CompanyIntergrationTest {
     }
 
     @Test
-    public void should_thorw_COMPANY_ID_DOES_NOT_EXIST_exception_when_etEmployeesByCompanyId_given_invalid_company_id() throws Exception {
+    public void should_thorw_COMPANY_ID_DOES_NOT_EXIST_exception_when_getEmployeesByCompanyId_given_invalid_company_id() throws Exception {
         //given
         final List<String> employeeIds = Arrays.asList("1", "2");
         Company company = new Company("alibaba", employeeIds);
