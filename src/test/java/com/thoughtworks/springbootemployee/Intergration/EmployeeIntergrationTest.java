@@ -139,7 +139,7 @@ public class EmployeeIntergrationTest {
     }
 
     @Test
-    public void should_update_employee_when_update_given_employee_id_and_request_info() throws Exception {
+    public void should_update_employee_when_update_given_employee_id_and_employeeUpdate_info() throws Exception {
         //given
         Employee employee1 = new Employee("David", 18, "male", 10000);
         employeeRepository.save(employee1);

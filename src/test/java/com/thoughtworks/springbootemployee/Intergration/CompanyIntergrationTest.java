@@ -142,38 +142,37 @@ public class CompanyIntergrationTest {
         assertEquals(Arrays.asList("1","2"), companies.get(0).getEmployeesId());
     }
 
-//    @Test
-//    public void should_update_employee_when_update_given_employee_id_and_request_info() throws Exception {
-//        //given
-//        Employee employee1 = new Employee("David", 18, "male", 10000);
-//        employeeRepository.save(employee1);
-//        String employeeUpdateAsJson = "{\n" +
-//                "        \"name\": \"tom\",\n" +
-//                "        \"age\": 22,\n" +
-//                "        \"gender\": \"male\",\n" +
-//                "        \"salary\": 7000\n" +
-//                "}";
-//
-//        //when
-//        //then
-//        mockMvc.perform(put("/employees/" + employee1.getId())
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(employeeUpdateAsJson))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").isString())
-//                .andExpect(jsonPath("$.name").value("tom"))
-//                .andExpect(jsonPath("$.age").value(22))
-//                .andExpect(jsonPath("$.gender").value("male"))
-//                .andExpect(jsonPath("$.salary").value(7000));
-//
-//        List<Employee> employees = employeeRepository.findAll();
-//        assertEquals(1, employees.size());
-//        assertEquals("tom", employees.get(0).getName());
-//        assertEquals(22, employees.get(0).getAge());
-//        assertEquals("male", employees.get(0).getGender());
-//        assertEquals(7000, employees.get(0).getSalary());
-//    }
-//
+    @Test
+    public void should_update_company_when_update_given_company_id_and_companyUpdate_info() throws Exception {
+        //given
+        final List<String> employeeIds = Arrays.asList("1", "2");
+        Company company = new Company("alibaba", 2, employeeIds);
+        companyRepository.save(company);
+        String companyUpdateAsJson = "{\n" +
+                "    \"companyName\": \"NEW\",\n" +
+                "    \"employeesNumber\" : 2,\n" +
+                "    \"employeesId\": [\"4\",\"5\"]\n" +
+                "}";
+
+        //when
+        //then
+        mockMvc.perform(put("/companies/" + company.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(companyUpdateAsJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isString())
+                .andExpect(jsonPath("$.companyName").value("NEW"))
+                .andExpect(jsonPath("$.employeesNumber").value(2))
+                .andExpect(jsonPath("$.employeesId[0]").value(4))
+                .andExpect(jsonPath("$.employeesId[1]").value(5));
+
+        List<Company> employees = companyRepository.findAll();
+        assertEquals(1, employees.size());
+        assertEquals("NEW", employees.get(0).getCompanyName());
+        assertEquals(2, employees.get(0).getEmployeesNumber());
+        assertEquals(Arrays.asList("4","5"), employees.get(0).getEmployeesId());
+    }
+
     @Test
     public void should_delete_specific_company_when_delete_given_valid_company_id() throws Exception {
         //given
