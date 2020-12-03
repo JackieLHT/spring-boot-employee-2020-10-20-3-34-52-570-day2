@@ -5,7 +5,9 @@ import com.thoughtworks.springbootemployee.Model.Employee;
 import com.thoughtworks.springbootemployee.Repository.CompanyRepository;
 import com.thoughtworks.springbootemployee.Repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,6 +15,7 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class CompanyService {
+    public static final String COMPANY_ID_DOES_NOT_EXIST = "Company Id does not exist";
     @Autowired
     private CompanyRepository companyRepository;
     @Autowired
@@ -29,17 +32,19 @@ public class CompanyService {
     }
 
     public Company getById(String id) {
-        return companyRepository.findById(id).orElse(null);
+        return companyRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_DOES_NOT_EXIST));
     }
 
     public List<Employee> getEmployeesByCompanyId(String id) {
         Company company = getById(id);
-        List<String> employeeIds = company.getEmployeesId();
-        Iterable<Employee> employees = employeeRepository.findAllById(employeeIds);
-        return StreamSupport
-                .stream(employees.spliterator(), false)
-                .collect(Collectors.toList());
-
+        if (company != null) {
+            List<String> employeeIds = company.getEmployeesId();
+            Iterable<Employee> employees = employeeRepository.findAllById(employeeIds);
+            return StreamSupport
+                    .stream(employees.spliterator(), false)
+                    .collect(Collectors.toList());
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_DOES_NOT_EXIST);
     }
 
     public List<Company> getPaginatedAll(Integer page, Integer pageSize) {
@@ -57,10 +62,14 @@ public class CompanyService {
             companyUpdate.setId(id);
             return companyRepository.save(companyUpdate);
         }
-        return null;
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_DOES_NOT_EXIST);
     }
 
     public void delete(String id) {
-        companyRepository.deleteById(id);
+        if (getById(id) != null) {
+            companyRepository.deleteById(id);
+            return;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_DOES_NOT_EXIST);
     }
 }
