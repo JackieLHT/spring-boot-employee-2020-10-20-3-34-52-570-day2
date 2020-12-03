@@ -1,7 +1,6 @@
 package com.thoughtworks.springbootemployee.Service;
-import com.thoughtworks.springbootemployee.Repository.EmployeeRepository;
 import com.thoughtworks.springbootemployee.Model.Employee;
-import com.thoughtworks.springbootemployee.Repository.EmployeeRepository1;
+import com.thoughtworks.springbootemployee.Repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -28,7 +27,7 @@ public class EmployeeServiceTest {
     @InjectMocks
     private EmployeeService employeeService;
     @Mock
-    EmployeeRepository1 employeeRepository;
+    EmployeeRepository employeeRepository;
 
     @Test
     public void should_return_all_employees_when_get_all_given_all_employees() {

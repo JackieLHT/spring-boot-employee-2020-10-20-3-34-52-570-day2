@@ -1,20 +1,18 @@
 package com.thoughtworks.springbootemployee.Service;
 
 import com.thoughtworks.springbootemployee.Model.Employee;
-import com.thoughtworks.springbootemployee.Repository.EmployeeRepository1;
+import com.thoughtworks.springbootemployee.Repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class EmployeeService {
     @Autowired
-    private EmployeeRepository1 employeeRepository;
+    private EmployeeRepository employeeRepository;
 
-    public EmployeeService(EmployeeRepository1 employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
