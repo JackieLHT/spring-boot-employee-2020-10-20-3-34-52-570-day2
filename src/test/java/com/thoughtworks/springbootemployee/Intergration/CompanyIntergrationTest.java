@@ -1,6 +1,7 @@
 package com.thoughtworks.springbootemployee.Intergration;
 
 import com.thoughtworks.springbootemployee.Model.Company;
+import com.thoughtworks.springbootemployee.Model.Employee;
 import com.thoughtworks.springbootemployee.Repository.CompanyRepository1;
 import com.thoughtworks.springbootemployee.Repository.EmployeeRepository1;
 import org.junit.jupiter.api.AfterEach;
@@ -17,7 +18,6 @@ import java.util.List;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,7 +31,7 @@ public class CompanyIntergrationTest {
     @Autowired
     private CompanyRepository1 companyRepository;
     @Autowired
-    private EmployeeRepository1 employeeRepository1;
+    private EmployeeRepository1 employeeRepository;
 
     @AfterEach
     void tearDown() {
@@ -72,27 +72,31 @@ public class CompanyIntergrationTest {
                 .andExpect(jsonPath("$.employeesId", hasSize(2)));
 
     }
-//
-//    @Test
-//    public void should_return_all_male_employees_when_get_by_gender_given_gender_is_male() throws Exception {
-//        //given
-//        Employee employee1 = new Employee("David", 18, "male", 10000);
-//        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
-//        employeeRepository.save(employee1);
-//        employeeRepository.save(employee2);
-//        //when
-//        //then
-//        mockMvc.perform(get("/employees").param("gender", "male"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$[0].id").isString())
-//                .andExpect(jsonPath("$[0].name").value("David"))
-//                .andExpect(jsonPath("$[0].age").value(18))
-//                .andExpect(jsonPath("$[0].gender").value("male"))
-//                .andExpect(jsonPath("$[0].salary").value(10000));
-//
-//        List<Employee> filteredEmployees = employeeRepository.findAllByGender("male");
-//        assertEquals(1, filteredEmployees.size());
-//    }
+
+    @Test
+    public void should_return_all_employees_of_specific_company_when_getEmployeesByCompanyId_given_companyId() throws Exception {
+        //given
+        Employee employee1 = new Employee("David", 18, "male", 10000);
+        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
+        employeeRepository.save(employee1);
+        employeeRepository.save(employee2);
+        List<String> employees = new ArrayList<>();
+        for(Employee employee:employeeRepository.findAll()){
+            employees.add(employee.getId());
+        }
+        Company company = new Company("alibaba", 2,employees);
+        companyRepository.save(company);
+        //when
+        //then
+        mockMvc.perform(get("/companies/"+company.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isString())
+                .andExpect(jsonPath("$.companyName").value("alibaba"))
+                .andExpect(jsonPath("$.employeesNumber").value(2))
+                .andExpect(jsonPath("$.employeesId", hasSize(2)))
+                .andExpect(jsonPath("$.employeesId[0]").value(employees.get(0)))
+                .andExpect(jsonPath("$.employeesId[1]").value(employees.get(1)));
+    }
 
     @Test
     public void should_return_2_companies_when_get_by_paging_given_3_companies_and_page_number_is_0_and_pagesize_is_2() throws Exception {
