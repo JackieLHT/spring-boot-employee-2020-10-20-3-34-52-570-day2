@@ -174,18 +174,19 @@ public class CompanyIntergrationTest {
 //        assertEquals(7000, employees.get(0).getSalary());
 //    }
 //
-//    @Test
-//    public void should_delete_specific_employee_when_delete_given_valid_employee_id() throws Exception {
-//        //given
-//        Employee employee = new Employee("David", 18, "male", 10000);
-//        employeeRepository.save(employee);
-//
-//        //when
-//        //then
-//        mockMvc.perform(delete("/employees/" + employee.getId()))
-//                .andExpect(status().isOk());
-//
-//        List<Employee> employees = employeeRepository.findAll();
-//        assertEquals(0, employees.size());
-//    }
+    @Test
+    public void should_delete_specific_company_when_delete_given_valid_company_id() throws Exception {
+        //given
+        final List<String> employeeIds = Arrays.asList("1", "2");
+        Company company = new Company("alibaba", 2, employeeIds);
+        companyRepository.save(company);
+
+        //when
+        //then
+        mockMvc.perform(delete("/companies/" + company.getId()))
+                .andExpect(status().isOk());
+
+        List<Company> employees = companyRepository.findAll();
+        assertEquals(0, employees.size());
+    }
 }
