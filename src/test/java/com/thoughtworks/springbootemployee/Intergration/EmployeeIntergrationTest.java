@@ -1,7 +1,6 @@
 package com.thoughtworks.springbootemployee.Intergration;
 
 import com.thoughtworks.springbootemployee.Model.Employee;
-import com.thoughtworks.springbootemployee.Repository.EmployeeRepository;
 import com.thoughtworks.springbootemployee.Repository.EmployeeRepository1;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -90,7 +89,7 @@ public class EmployeeIntergrationTest {
     }
 
     @Test
-    public void should_return_2_employees_when_get_by_paging_given_3_employees_and_page_number_is_1_and_pagesize_is_2() throws Exception {
+    public void should_return_2_employees_when_get_by_paging_given_3_employees_and_page_number_is_0_and_pagesize_is_2() throws Exception {
         //given
         Employee employee1 = new Employee("David", 18, "male", 10000);
         Employee employee2 = new Employee("Jackie", 18, "female", 10000);
@@ -100,7 +99,7 @@ public class EmployeeIntergrationTest {
         employeeRepository.save(employee3);
         //when
         //then
-        mockMvc.perform(get("/employees").param("page", String.valueOf(1)).param("pageSize", String.valueOf(2)))
+        mockMvc.perform(get("/employees").param("page", String.valueOf(0)).param("pageSize", String.valueOf(2)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].name").value("David"))

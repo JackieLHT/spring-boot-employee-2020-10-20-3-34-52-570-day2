@@ -3,12 +3,10 @@ package com.thoughtworks.springbootemployee.Service;
 import com.thoughtworks.springbootemployee.Model.Company;
 import com.thoughtworks.springbootemployee.Model.Employee;
 import com.thoughtworks.springbootemployee.Repository.CompanyRepository1;
-import com.thoughtworks.springbootemployee.Repository.EmployeeRepository;
 import com.thoughtworks.springbootemployee.Repository.EmployeeRepository1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -45,7 +43,6 @@ public class CompanyService {
     }
 
     public List<Company> getPaginatedAll(Integer page, Integer pageSize) {
-        page = page - 1;
         return companyRepository.findAll().stream().skip(page * pageSize)
                 .limit(pageSize)
                 .collect(Collectors.toList());
