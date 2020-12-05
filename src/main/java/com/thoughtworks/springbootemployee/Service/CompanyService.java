@@ -37,14 +37,11 @@ public class CompanyService {
 
     public List<Employee> getEmployeesByCompanyId(String id) {
         Company company = getById(id);
-        if (company != null) {
-            List<String> employeeIds = company.getEmployeesId();
-            Iterable<Employee> employees = employeeRepository.findAllById(employeeIds);
-            return StreamSupport
-                    .stream(employees.spliterator(), false)
-                    .collect(Collectors.toList());
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_DOES_NOT_EXIST);
+        List<String> employeeIds = company.getEmployeesId();
+        Iterable<Employee> employees = employeeRepository.findAllById(employeeIds);
+        return StreamSupport
+                .stream(employees.spliterator(), false)
+                .collect(Collectors.toList());
     }
 
     public List<Company> getPaginatedAll(Integer page, Integer pageSize) {
@@ -58,18 +55,14 @@ public class CompanyService {
     }
 
     public Company update(String id, Company companyUpdate) {
-        if (getById(id) != null) {
-            companyUpdate.setId(id);
-            return companyRepository.save(companyUpdate);
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_DOES_NOT_EXIST);
+        Company company = getById(id);
+        companyUpdate.setId(company.getId());
+        return companyRepository.save(companyUpdate);
     }
 
     public void delete(String id) {
-        if (getById(id) != null) {
-            companyRepository.deleteById(id);
-            return;
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_DOES_NOT_EXIST);
+        Company company = getById(id);
+        companyRepository.deleteById(company.getId());
+        return;
     }
 }

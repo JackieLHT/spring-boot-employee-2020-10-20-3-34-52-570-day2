@@ -152,7 +152,6 @@ public class CompanyIntergrationTest {
         //given
         String companyAsJson = "{\n" +
                 "    \"companyName\": \"alibaba\",\n" +
-                "    \"employeesNumber\" : 2,\n" +
                 "    \"employeesId\": [\"1\",\"2\"]\n" +
                 "}";
 
@@ -183,7 +182,6 @@ public class CompanyIntergrationTest {
         companyRepository.save(company);
         String companyUpdateAsJson = "{\n" +
                 "    \"companyName\": \"NEW\",\n" +
-                "    \"employeesNumber\" : 2,\n" +
                 "    \"employeesId\": [\"4\",\"5\"]\n" +
                 "}";
         //when
@@ -205,7 +203,6 @@ public class CompanyIntergrationTest {
         companyRepository.save(company);
         String companyUpdateAsJson = "{\n" +
                 "    \"companyName\": \"NEW\",\n" +
-                "    \"employeesNumber\" : 2,\n" +
                 "    \"employeesId\": [\"4\",\"5\"]\n" +
                 "}";
 
@@ -241,6 +238,7 @@ public class CompanyIntergrationTest {
                 .andExpect(status().isOk());
 
         List<Company> employees = companyRepository.findAll();
+        //TODO: change checking logic
         assertEquals(0, employees.size());
     }
 

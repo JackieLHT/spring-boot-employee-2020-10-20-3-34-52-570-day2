@@ -43,18 +43,15 @@ public class EmployeeService {
     }
 
     public Employee update(String id, Employee employeeUpdate) {
-        if(getById(id) != null){
-            employeeUpdate.setId(id);
-            return employeeRepository.save(employeeUpdate);
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_DOES_NOT_EXIST);
+        Employee employee = getById(id);
+        employeeUpdate.setId(employee.getId());
+        return employeeRepository.save(employeeUpdate);
     }
 
     public void delete(String id) {
-        if(getById(id) != null) {
-            employeeRepository.deleteById(id);
-            return;
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_DOES_NOT_EXIST);
+        Employee employee = getById(id);
+        employeeRepository.deleteById(employee.getId());
+        return;
+
     }
 }
