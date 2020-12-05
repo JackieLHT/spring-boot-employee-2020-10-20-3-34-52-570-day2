@@ -1,5 +1,6 @@
 package com.thoughtworks.springbootemployee.Service;
 
+import com.thoughtworks.springbootemployee.Exception.CompanyNotFoundException;
 import com.thoughtworks.springbootemployee.Model.Company;
 import com.thoughtworks.springbootemployee.Model.Employee;
 import com.thoughtworks.springbootemployee.Repository.CompanyRepository;
@@ -71,7 +72,7 @@ public class CompanyServiceTest {
         //given
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> {
+        assertThrows(CompanyNotFoundException.class, () -> {
             companyService.getById("999");
         }, "Company Id does not exist");
     }
@@ -152,7 +153,6 @@ public class CompanyServiceTest {
 
         //then
         assertEquals("baliaa", updatedCompany.getCompanyName());
-        assertEquals(2, updatedCompany.getEmployeesNumber());
         assertEquals(employees, updatedCompany.getEmployeesId());
     }
 
@@ -163,7 +163,7 @@ public class CompanyServiceTest {
         final Company company = new Company("baliaa", employees);
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> {
+        assertThrows(CompanyNotFoundException.class, () -> {
             companyService.update("999", company);
         }, "Company Id does not exist");
     }
@@ -187,7 +187,7 @@ public class CompanyServiceTest {
         //given
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> {
+        assertThrows(CompanyNotFoundException.class, () -> {
             companyService.delete("999");
         }, "Company Id does not exist");
     }

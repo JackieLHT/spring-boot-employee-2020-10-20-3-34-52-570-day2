@@ -1,5 +1,6 @@
 package com.thoughtworks.springbootemployee.Intergration;
 
+import com.thoughtworks.springbootemployee.Exception.CompanyNotFoundException;
 import com.thoughtworks.springbootemployee.Model.Company;
 import com.thoughtworks.springbootemployee.Model.Employee;
 import com.thoughtworks.springbootemployee.Repository.CompanyRepository;
@@ -86,8 +87,8 @@ public class CompanyIntergrationTest {
         //then
         mockMvc.perform(get("/companies/" + "5fc8913234ba53396c26a863"))
                 .andExpect(status().isNotFound())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
-                .andExpect(result -> assertEquals("404 NOT_FOUND \"Company Id does not exist\"", result.getResolvedException().getMessage()));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof CompanyNotFoundException))
+                .andExpect(result -> assertEquals("Company Id does not exist", result.getResolvedException().getMessage()));
 
     }
 
@@ -126,8 +127,8 @@ public class CompanyIntergrationTest {
         //then
         mockMvc.perform(get("/companies/" + "5fc8913234ba53396c26a863"))
                 .andExpect(status().isNotFound())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
-                .andExpect(result -> assertEquals("404 NOT_FOUND \"Company Id does not exist\"", result.getResolvedException().getMessage()));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof CompanyNotFoundException))
+                .andExpect(result -> assertEquals("Company Id does not exist", result.getResolvedException().getMessage()));
 
     }
 
@@ -170,7 +171,6 @@ public class CompanyIntergrationTest {
         List<Company> companies = companyRepository.findAll();
         assertEquals(1, companies.size());
         assertEquals("alibaba", companies.get(0).getCompanyName());
-        assertEquals(2, companies.get(0).getEmployeesNumber());
         assertEquals(Arrays.asList("1", "2"), companies.get(0).getEmployeesId());
     }
 
@@ -190,8 +190,8 @@ public class CompanyIntergrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(companyUpdateAsJson))
                 .andExpect(status().isNotFound())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
-                .andExpect(result -> assertEquals("404 NOT_FOUND \"Company Id does not exist\"", result.getResolvedException().getMessage()));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof CompanyNotFoundException))
+                .andExpect(result -> assertEquals("Company Id does not exist", result.getResolvedException().getMessage()));
 
     }
 
@@ -221,7 +221,6 @@ public class CompanyIntergrationTest {
         List<Company> employees = companyRepository.findAll();
         assertEquals(1, employees.size());
         assertEquals("NEW", employees.get(0).getCompanyName());
-        assertEquals(2, employees.get(0).getEmployeesNumber());
         assertEquals(Arrays.asList("4", "5"), employees.get(0).getEmployeesId());
     }
 
@@ -252,8 +251,8 @@ public class CompanyIntergrationTest {
         //then
         mockMvc.perform(delete("/companies/" + "5fc8913234ba53396c26a863"))
                 .andExpect(status().isNotFound())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
-                .andExpect(result -> assertEquals("404 NOT_FOUND \"Company Id does not exist\"", result.getResolvedException().getMessage()));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof CompanyNotFoundException))
+                .andExpect(result -> assertEquals("Company Id does not exist", result.getResolvedException().getMessage()));
 
     }
 }

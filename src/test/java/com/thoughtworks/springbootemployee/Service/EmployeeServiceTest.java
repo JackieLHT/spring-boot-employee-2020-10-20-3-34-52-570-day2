@@ -1,5 +1,6 @@
 package com.thoughtworks.springbootemployee.Service;
 
+import com.thoughtworks.springbootemployee.Exception.EmployeeNotFoundException;
 import com.thoughtworks.springbootemployee.Model.Employee;
 import com.thoughtworks.springbootemployee.Repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
@@ -82,7 +83,7 @@ public class EmployeeServiceTest {
         //given
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> {
+        assertThrows(EmployeeNotFoundException.class, () -> {
             employeeService.getById("999");
         }, "Employee Id does not exist");
     }
@@ -141,7 +142,7 @@ public class EmployeeServiceTest {
         final Employee employeeUpdate = new Employee("david", 22, "male", 11111);
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> {
+        assertThrows(EmployeeNotFoundException.class, () -> {
             employeeService.update("999", employeeUpdate);
         }, "Employee Id does not exist");
     }
@@ -165,7 +166,7 @@ public class EmployeeServiceTest {
         //given
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> {
+        assertThrows(EmployeeNotFoundException.class, () -> {
             employeeService.delete("999");
         }, "Employee Id does not exist");
     }

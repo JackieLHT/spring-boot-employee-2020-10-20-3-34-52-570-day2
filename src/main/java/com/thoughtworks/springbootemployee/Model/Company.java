@@ -11,7 +11,6 @@ public class Company {
     @MongoId(FieldType.OBJECT_ID)
     private String id;
     private String companyName;
-    private Integer employeesNumber;
     private List<String> employeesId;
 
     public Company() {
@@ -20,11 +19,18 @@ public class Company {
     public Company(String companyName, List<String> employees) {
         this.companyName = companyName;
         this.employeesId = employees;
-        this.employeesNumber = employees.size();
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public void setEmployeesId(List<String> employeesId) {
+        this.employeesId = employeesId;
     }
 
     public String getId() {
@@ -33,10 +39,6 @@ public class Company {
 
     public String getCompanyName() {
         return companyName;
-    }
-
-    public Integer getEmployeesNumber() {
-        return employeesNumber;
     }
 
     public List<String> getEmployeesId() {
@@ -54,6 +56,6 @@ public class Company {
         }
 
         final Company other = (Company) obj;
-        return this.id.equals(other.id) && this.companyName.equals(other.companyName) && this.employeesNumber == other.employeesNumber && this.employeesId == other.employeesId;
+        return this.id.equals(other.id) && this.companyName.equals(other.companyName) && this.employeesId == other.employeesId;
     }
 }

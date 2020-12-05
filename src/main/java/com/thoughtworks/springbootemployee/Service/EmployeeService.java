@@ -1,5 +1,6 @@
 package com.thoughtworks.springbootemployee.Service;
 
+import com.thoughtworks.springbootemployee.Exception.EmployeeNotFoundException;
 import com.thoughtworks.springbootemployee.Model.Employee;
 import com.thoughtworks.springbootemployee.Repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class EmployeeService {
     }
 
     public Employee getById(String id) {
-        return employeeRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_DOES_NOT_EXIST));
+        return employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_ID_DOES_NOT_EXIST));
     }
 
     public List<Employee> getPaginatedAll(Integer page, Integer pageSize) {
