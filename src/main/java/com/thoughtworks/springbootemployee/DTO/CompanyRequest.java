@@ -1,33 +1,31 @@
 package com.thoughtworks.springbootemployee.DTO;
 
-import com.thoughtworks.springbootemployee.Model.Employee;
-
 import java.util.List;
 
 public class CompanyRequest {
     public CompanyRequest() { }
-    private String name;
-    private List<EmployeeRequest> employees;
+    private String companyName;
+    private List<String> employeeIds;
 
-    public CompanyRequest(String name, List<EmployeeRequest> employeeRequest) {
-        this.name = name;
-        this.employees = employeeRequest;
+    public CompanyRequest(String companyName, List<String> employeeIds) {
+        this.companyName = companyName;
+        this.employeeIds = employeeIds;
 
     }
 
-    public String getName() {
-        return name;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
-    public List<EmployeeRequest> getEmployees() {
-        return employees;
+    public List<String> getEmployeeIds() {
+        return employeeIds;
     }
 
-    public void setEmployees(List<EmployeeRequest> employees) {
-        this.employees = employees;
+    public void setEmployeeIds(List<String> employeeIds) {
+        this.employeeIds = employeeIds;
     }
 }

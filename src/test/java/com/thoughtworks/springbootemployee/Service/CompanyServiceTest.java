@@ -14,7 +14,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -153,7 +152,7 @@ public class CompanyServiceTest {
 
         //then
         assertEquals("baliaa", updatedCompany.getCompanyName());
-        assertEquals(employees, updatedCompany.getEmployeesId());
+        assertEquals(employees, updatedCompany.getEmployeeIds());
     }
 
     @Test

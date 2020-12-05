@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,9 +53,7 @@ public class CompanyIntergrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].companyName").value("alibaba"))
-                .andExpect(jsonPath("$[0].employeesNumber").value(2))
-                .andExpect(jsonPath("$[0].employeesId[0]").value(1))
-                .andExpect(jsonPath("$[0].employeesId[1]").value(2));
+                .andExpect(jsonPath("$[0].employeesNumber").value(2));
 
     }
 
@@ -73,7 +70,7 @@ public class CompanyIntergrationTest {
                 .andExpect(jsonPath("$.id").isString())
                 .andExpect(jsonPath("$.companyName").value("alibaba"))
                 .andExpect(jsonPath("$.employeesNumber").value(2))
-                .andExpect(jsonPath("$.employeesId", hasSize(2)));
+                .andExpect(jsonPath("$.employees", hasSize(2)));
 
     }
 
@@ -153,7 +150,7 @@ public class CompanyIntergrationTest {
         //given
         String companyAsJson = "{\n" +
                 "    \"companyName\": \"alibaba\",\n" +
-                "    \"employeesId\": [\"1\",\"2\"]\n" +
+                "    \"employeeIds\": [\"1\",\"2\"]\n" +
                 "}";
 
         //when
@@ -165,13 +162,12 @@ public class CompanyIntergrationTest {
                 .andExpect(jsonPath("$.id").isString())
                 .andExpect(jsonPath("$.companyName").value("alibaba"))
                 .andExpect(jsonPath("$.employeesNumber").value(2))
-                .andExpect(jsonPath("$.employeesId[0]").value(1))
-                .andExpect(jsonPath("$.employeesId[1]").value(2));
+                .andExpect(jsonPath("$.employees", hasSize(2)));
 
         List<Company> companies = companyRepository.findAll();
         assertEquals(1, companies.size());
         assertEquals("alibaba", companies.get(0).getCompanyName());
-        assertEquals(Arrays.asList("1", "2"), companies.get(0).getEmployeesId());
+        assertEquals(Arrays.asList("1", "2"), companies.get(0).getEmployeeIds());
     }
 
     @Test
@@ -182,7 +178,7 @@ public class CompanyIntergrationTest {
         companyRepository.save(company);
         String companyUpdateAsJson = "{\n" +
                 "    \"companyName\": \"NEW\",\n" +
-                "    \"employeesId\": [\"4\",\"5\"]\n" +
+                "    \"employeeIds\": [\"4\",\"5\"]\n" +
                 "}";
         //when
         //then
@@ -203,7 +199,7 @@ public class CompanyIntergrationTest {
         companyRepository.save(company);
         String companyUpdateAsJson = "{\n" +
                 "    \"companyName\": \"NEW\",\n" +
-                "    \"employeesId\": [\"4\",\"5\"]\n" +
+                "    \"employeeIds\": [\"4\",\"5\"]\n" +
                 "}";
 
         //when
@@ -215,13 +211,12 @@ public class CompanyIntergrationTest {
                 .andExpect(jsonPath("$.id").isString())
                 .andExpect(jsonPath("$.companyName").value("NEW"))
                 .andExpect(jsonPath("$.employeesNumber").value(2))
-                .andExpect(jsonPath("$.employeesId[0]").value(4))
-                .andExpect(jsonPath("$.employeesId[1]").value(5));
+                .andExpect(jsonPath("$.employees", hasSize(2)));
 
         List<Company> employees = companyRepository.findAll();
         assertEquals(1, employees.size());
         assertEquals("NEW", employees.get(0).getCompanyName());
-        assertEquals(Arrays.asList("4", "5"), employees.get(0).getEmployeesId());
+        assertEquals(Arrays.asList("4", "5"), employees.get(0).getEmployeeIds());
     }
 
     @Test

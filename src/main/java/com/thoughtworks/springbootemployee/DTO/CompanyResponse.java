@@ -12,11 +12,10 @@ public class CompanyResponse {
 
     public CompanyResponse(){}
 
-    public CompanyResponse(String id, String companyName, Integer employeesNumber, List<EmployeeResponse> employees) {
+    public CompanyResponse(String id, String companyName, List<EmployeeResponse> employees) {
         this.id = id;
         this.employeesNumber = employees.size();
         this.companyName = companyName;
-        this.employeesNumber = employeesNumber;
         this.employees = employees;
     }
 
