@@ -14,7 +14,6 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class CompanyService {
-    public static final String COMPANY_ID_DOES_NOT_EXIST = "Company Id does not exist";
     @Autowired
     private CompanyRepository companyRepository;
     @Autowired
@@ -31,7 +30,7 @@ public class CompanyService {
     }
 
     public Company getById(String id) {
-        return companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException(COMPANY_ID_DOES_NOT_EXIST));
+        return companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException());
     }
 
     public List<Employee> getEmployeesByCompanyId(String id) {

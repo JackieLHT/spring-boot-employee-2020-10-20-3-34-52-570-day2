@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
-    public static final String EMPLOYEE_ID_DOES_NOT_EXIST = "Employee Id does not exist";
     @Autowired
     private EmployeeRepository employeeRepository;
 
@@ -30,7 +29,7 @@ public class EmployeeService {
     }
 
     public Employee getById(String id) {
-        return employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_ID_DOES_NOT_EXIST));
+        return employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException());
     }
 
     public List<Employee> getPaginatedAll(Integer page, Integer pageSize) {

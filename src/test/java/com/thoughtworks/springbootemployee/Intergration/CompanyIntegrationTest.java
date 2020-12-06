@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CompanyIntergrationTest {
+public class CompanyIntegrationTest {
     @Autowired
     MockMvc mockMvc;
 
@@ -91,7 +92,7 @@ public class CompanyIntergrationTest {
     }
 
     @Test
-    public void should_thorw_COMPANY_ID_DOES_NOT_EXIST_exception_when_getById_given_invalid_company_id() throws Exception {
+    public void should_throw_COMPANY_ID_DOES_NOT_EXIST_exception_when_getById_given_invalid_company_id() throws Exception {
         //given
         Employee employee1 = new Employee("David", 18, "male", 10000);
         Employee employee2 = new Employee("Jackie", 18, "female", 10000);
@@ -138,7 +139,7 @@ public class CompanyIntergrationTest {
     }
 
     @Test
-    public void should_thorw_COMPANY_ID_DOES_NOT_EXIST_exception_when_getEmployeesByCompanyId_given_invalid_company_id() throws Exception {
+    public void should_throw_COMPANY_ID_DOES_NOT_EXIST_exception_when_getEmployeesByCompanyId_given_invalid_company_id() throws Exception {
         //given
         Employee employee1 = new Employee("David", 18, "male", 10000);
         Employee employee2 = new Employee("Jackie", 18, "female", 10000);
@@ -160,7 +161,7 @@ public class CompanyIntergrationTest {
     }
 
     @Test
-    public void should_return_2_companies_when_get_by_paging_given_3_companies_and_page_number_is_0_and_pagesize_is_2() throws Exception {
+    public void should_return_2_companies_when_get_by_paging_given_3_companies_and_page_number_is_0_and_pageSize_is_2() throws Exception {
         //given
         Employee employee1 = new Employee("David", 18, "male", 10000);
         Employee employee2 = new Employee("Jackie", 18, "female", 10000);
@@ -168,7 +169,6 @@ public class CompanyIntergrationTest {
         employeeRepository.save(employee1);
         employeeRepository.save(employee2);
         employeeRepository.save(employee3);
-        List<String> employees = new ArrayList<>();
         Company company1 = new Company("KFC", Arrays.asList(employee1.getId()));
         Company company2 = new Company("UNIQUO", Arrays.asList(employee2.getId()));
         Company company3 = new Company("LOGON", Arrays.asList(employee3.getId()));
@@ -283,16 +283,14 @@ public class CompanyIntergrationTest {
         employee2.setId("5fc882b23bf5ed6bcd35a296");
         Company company = new Company("alibaba", Arrays.asList("5fc8829e3bf5ed6bcd35a295", "5fc882b23bf5ed6bcd35a296"));
         companyRepository.save(company);
-
+        String companyId = company.getId();
         //when
         //then
-        mockMvc.perform(delete("/companies/" + company.getId()))
+        mockMvc.perform(delete("/companies/" + companyId))
                 .andExpect(status().isOk());
 
-        List<Company> employees = companyRepository.findAll();
         //TODO: change checking logic
-
-        assertEquals(0, employees.size());
+        assertThat(companyRepository.findById(companyId)).isEmpty();
     }
 
     @Test
