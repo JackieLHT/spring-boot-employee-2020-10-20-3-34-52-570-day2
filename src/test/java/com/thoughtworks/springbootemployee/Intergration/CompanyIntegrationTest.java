@@ -63,7 +63,11 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].companyName").value("alibaba"))
                 .andExpect(jsonPath("$[0].employeesNumber").value(2))
-                .andExpect(jsonPath("$[0].employees", hasSize(2)));
+                .andExpect(jsonPath("$[0].employees", hasSize(2)))
+                .andExpect(jsonPath("$[0].employees[0].id").value(employee1.getId()))
+                .andExpect(jsonPath("$[0].employees[0].name").value(employee1.getName()))
+                .andExpect(jsonPath("$[0].employees[0].gender").value(employee1.getGender()))
+                .andExpect(jsonPath("$[0].employees[0].salary").value(employee1.getSalary()));
 
     }
 
