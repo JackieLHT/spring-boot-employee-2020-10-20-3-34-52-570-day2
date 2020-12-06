@@ -39,13 +39,21 @@ public class CompanyIntergrationTest {
     @AfterEach
     void tearDown() {
         companyRepository.deleteAll();
+        employeeRepository.deleteAll();
     }
 
     @Test
     public void should_return_all_companies_when_get_all_given_all_companies() throws Exception {
         //given
-        final List<String> employeeIds = Arrays.asList("1", "2");
-        Company company = new Company("alibaba", employeeIds);
+        Employee employee1 = new Employee("David", 18, "male", 10000);
+        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
+        employeeRepository.save(employee1);
+        employeeRepository.save(employee2);
+        List<String> employees = new ArrayList<>();
+        for (Employee employee : employeeRepository.findAll()) {
+            employees.add(employee.getId());
+        }
+        Company company = new Company("alibaba", employees);
         companyRepository.save(company);
         //when
         //then
@@ -53,15 +61,23 @@ public class CompanyIntergrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].companyName").value("alibaba"))
-                .andExpect(jsonPath("$[0].employeesNumber").value(2));
+                .andExpect(jsonPath("$[0].employeesNumber").value(2))
+                .andExpect(jsonPath("$[0].employees", hasSize(2)));
 
     }
 
     @Test
     public void should_return_specific_company_when_get_by_id_given_valid_company_id() throws Exception {
         //given
-        final List<String> employeeIds = Arrays.asList("1", "2");
-        Company company = new Company("alibaba", employeeIds);
+        Employee employee1 = new Employee("David", 18, "male", 10000);
+        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
+        employeeRepository.save(employee1);
+        employeeRepository.save(employee2);
+        List<String> employees = new ArrayList<>();
+        for (Employee employee : employeeRepository.findAll()) {
+            employees.add(employee.getId());
+        }
+        Company company = new Company("alibaba", employees);
         companyRepository.save(company);
         //when
         //then
@@ -77,8 +93,15 @@ public class CompanyIntergrationTest {
     @Test
     public void should_thorw_COMPANY_ID_DOES_NOT_EXIST_exception_when_getById_given_invalid_company_id() throws Exception {
         //given
-        final List<String> employeeIds = Arrays.asList("1", "2");
-        Company company = new Company("alibaba", employeeIds);
+        Employee employee1 = new Employee("David", 18, "male", 10000);
+        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
+        employeeRepository.save(employee1);
+        employeeRepository.save(employee2);
+        List<String> employees = new ArrayList<>();
+        for (Employee employee : employeeRepository.findAll()) {
+            employees.add(employee.getId());
+        }
+        Company company = new Company("alibaba", employees);
         companyRepository.save(company);
         //when
         //then
@@ -117,8 +140,15 @@ public class CompanyIntergrationTest {
     @Test
     public void should_thorw_COMPANY_ID_DOES_NOT_EXIST_exception_when_getEmployeesByCompanyId_given_invalid_company_id() throws Exception {
         //given
-        final List<String> employeeIds = Arrays.asList("1", "2");
-        Company company = new Company("alibaba", employeeIds);
+        Employee employee1 = new Employee("David", 18, "male", 10000);
+        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
+        employeeRepository.save(employee1);
+        employeeRepository.save(employee2);
+        List<String> employees = new ArrayList<>();
+        for (Employee employee : employeeRepository.findAll()) {
+            employees.add(employee.getId());
+        }
+        Company company = new Company("alibaba", employees);
         companyRepository.save(company);
         //when
         //then
@@ -132,9 +162,16 @@ public class CompanyIntergrationTest {
     @Test
     public void should_return_2_companies_when_get_by_paging_given_3_companies_and_page_number_is_0_and_pagesize_is_2() throws Exception {
         //given
-        Company company1 = new Company("KFC", Arrays.asList("1", "2"));
-        Company company2 = new Company("UNIQUO", Arrays.asList("4", "5"));
-        Company company3 = new Company("LOGON", Arrays.asList("6", "7"));
+        Employee employee1 = new Employee("David", 18, "male", 10000);
+        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
+        Employee employee3 = new Employee("Tom", 18, "male", 10000);
+        employeeRepository.save(employee1);
+        employeeRepository.save(employee2);
+        employeeRepository.save(employee3);
+        List<String> employees = new ArrayList<>();
+        Company company1 = new Company("KFC", Arrays.asList(employee1.getId()));
+        Company company2 = new Company("UNIQUO", Arrays.asList(employee2.getId()));
+        Company company3 = new Company("LOGON", Arrays.asList(employee3.getId()));
         companyRepository.save(company1);
         companyRepository.save(company2);
         companyRepository.save(company3);
@@ -148,9 +185,15 @@ public class CompanyIntergrationTest {
     @Test
     public void should_return_created_company_when_create_given_valid_company() throws Exception {
         //given
+        Employee employee1 = new Employee("David", 18, "male", 10000);
+        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
+        employee1.setId("5fc8829e3bf5ed6bcd35a295");
+        employee2.setId("5fc882b23bf5ed6bcd35a296");
+        employeeRepository.save(employee1);
+        employeeRepository.save(employee2);
         String companyAsJson = "{\n" +
                 "    \"companyName\": \"alibaba\",\n" +
-                "    \"employeeIds\": [\"1\",\"2\"]\n" +
+                "    \"employeeIds\": [\"5fc8829e3bf5ed6bcd35a295\",\"5fc882b23bf5ed6bcd35a296\"]\n" +
                 "}";
 
         //when
@@ -167,18 +210,23 @@ public class CompanyIntergrationTest {
         List<Company> companies = companyRepository.findAll();
         assertEquals(1, companies.size());
         assertEquals("alibaba", companies.get(0).getCompanyName());
-        assertEquals(Arrays.asList("1", "2"), companies.get(0).getEmployeeIds());
+        assertEquals(Arrays.asList("5fc8829e3bf5ed6bcd35a295", "5fc882b23bf5ed6bcd35a296"), companies.get(0).getEmployeeIds());
     }
 
     @Test
     public void should_thorw_COMPANY_ID_DOES_NOT_EXIST_exception_when_update_given_invalid_company_id() throws Exception {
         //given
-        final List<String> employeeIds = Arrays.asList("1", "2");
-        Company company = new Company("alibaba", employeeIds);
+        Employee employee1 = new Employee("David", 18, "male", 10000);
+        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
+        employee1.setId("5fc8829e3bf5ed6bcd35a295");
+        employee2.setId("5fc882b23bf5ed6bcd35a296");
+        employeeRepository.save(employee1);
+        employeeRepository.save(employee2);
+        Company company = new Company("alibaba", Arrays.asList(employee1.getId(),employee2.getId()));
         companyRepository.save(company);
         String companyUpdateAsJson = "{\n" +
                 "    \"companyName\": \"NEW\",\n" +
-                "    \"employeeIds\": [\"4\",\"5\"]\n" +
+                "    \"employeeIds\": [\"5fc8829e3bf5ed6bcd35a295\",\"5fc882b23bf5ed6bcd35a296\"]\n" +
                 "}";
         //when
         //then
@@ -194,12 +242,17 @@ public class CompanyIntergrationTest {
     @Test
     public void should_update_company_when_update_given_company_id_and_companyUpdate_info() throws Exception {
         //given
-        final List<String> employeeIds = Arrays.asList("1", "2");
-        Company company = new Company("alibaba", employeeIds);
+        Employee employee1 = new Employee("David", 18, "male", 10000);
+        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
+        employee1.setId("5fc8829e3bf5ed6bcd35a295");
+        employee2.setId("5fc882b23bf5ed6bcd35a296");
+        employeeRepository.save(employee1);
+        employeeRepository.save(employee2);
+        Company company = new Company("alibaba", Arrays.asList(employee1.getId(),employee2.getId()));
         companyRepository.save(company);
         String companyUpdateAsJson = "{\n" +
                 "    \"companyName\": \"NEW\",\n" +
-                "    \"employeeIds\": [\"4\",\"5\"]\n" +
+                "    \"employeeIds\": [\"5fc8829e3bf5ed6bcd35a295\",\"5fc882b23bf5ed6bcd35a296\"]\n" +
                 "}";
 
         //when
@@ -213,17 +266,22 @@ public class CompanyIntergrationTest {
                 .andExpect(jsonPath("$.employeesNumber").value(2))
                 .andExpect(jsonPath("$.employees", hasSize(2)));
 
-        List<Company> employees = companyRepository.findAll();
-        assertEquals(1, employees.size());
-        assertEquals("NEW", employees.get(0).getCompanyName());
-        assertEquals(Arrays.asList("4", "5"), employees.get(0).getEmployeeIds());
+        List<Company> companies = companyRepository.findAll();
+        assertEquals(1, companies.size());
+        assertEquals("NEW", companies.get(0).getCompanyName());
+        assertEquals(Arrays.asList("5fc8829e3bf5ed6bcd35a295", "5fc882b23bf5ed6bcd35a296"), companies.get(0).getEmployeeIds());
     }
 
     @Test
     public void should_delete_specific_company_when_delete_given_valid_company_id() throws Exception {
         //given
-        final List<String> employeeIds = Arrays.asList("1", "2");
-        Company company = new Company("alibaba", employeeIds);
+        Employee employee1 = new Employee("David", 18, "male", 10000);
+        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
+        employeeRepository.save(employee1);
+        employeeRepository.save(employee2);
+        employee1.setId("5fc8829e3bf5ed6bcd35a295");
+        employee2.setId("5fc882b23bf5ed6bcd35a296");
+        Company company = new Company("alibaba", Arrays.asList("5fc8829e3bf5ed6bcd35a295", "5fc882b23bf5ed6bcd35a296"));
         companyRepository.save(company);
 
         //when
@@ -233,14 +291,20 @@ public class CompanyIntergrationTest {
 
         List<Company> employees = companyRepository.findAll();
         //TODO: change checking logic
+
         assertEquals(0, employees.size());
     }
 
     @Test
     public void should_thorw_COMPANY_ID_DOES_NOT_EXIST_exception_when_delete_given_invalid_company_id() throws Exception {
         //given
-        final List<String> employeeIds = Arrays.asList("1", "2");
-        Company company = new Company("alibaba", employeeIds);
+        Employee employee1 = new Employee("David", 18, "male", 10000);
+        Employee employee2 = new Employee("Jackie", 18, "female", 10000);
+        employeeRepository.save(employee1);
+        employeeRepository.save(employee2);
+        employee1.setId("5fc8829e3bf5ed6bcd35a295");
+        employee2.setId("5fc882b23bf5ed6bcd35a296");
+        Company company = new Company("alibaba",  Arrays.asList("5fc8829e3bf5ed6bcd35a295", "5fc882b23bf5ed6bcd35a296"));
         companyRepository.save(company);
         //when
         //then

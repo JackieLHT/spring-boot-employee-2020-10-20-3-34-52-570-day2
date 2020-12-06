@@ -50,7 +50,6 @@ public class CompanyController {
 
     @PostMapping
     public CompanyResponse create(@RequestBody CompanyRequest company) {
-
         Company newCompany =  companyService.create(companyMapper.toEntity((company)));
         return companyMapper.toResponse(newCompany);
     }
